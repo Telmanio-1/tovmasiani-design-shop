@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta
+      name="description"
+      content="Безопасная оплата заказа neServices через платёжную форму Т‑Банка."
+    />
+    <meta name="theme-color" content="#f2f0e9" />
+    <title>Оплата заказа — neServices</title>
+    <style>
+      :root {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        color: #171717;
+        background: #f2f0e9;
+        --ink: #171717;
+        --paper: #f2f0e9;
+        --lime: #c7ff37;
+        --yellow: #ffdd2d;
+        --orange: #ff6a3d;
+        --line: rgba(23, 23, 23, 0.18);
+        --muted: #6e6a63;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--paper);
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      a {
+        color: inherit;
+      }
+      .topline {
+        min-height: 32px;
+        padding: 8px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 13px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .topline b {
+        color: var(--lime);
+      }
+      .header {
+        height: 88px;
+        padding: 0 clamp(20px, 4vw, 64px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .brand b {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--ink);
+        color: #fff;
+        font:
+          900 13px/1 "Arial Black",
+          Arial,
+          sans-serif;
+      }
+      .brand small {
+        display: block;
+        margin-top: 4px;
+        color: #77736d;
+        font-size: 8px;
+        letter-spacing: 0.16em;
+      }
+      .back {
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-underline-offset: 5px;
+      }
+      .layout {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 64px 0 90px;
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: clamp(42px, 8vw, 105px);
+        align-items: start;
+      }
+      .summary {
+        position: sticky;
+        top: 30px;
+      }
+      .step {
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .summary h1 {
+        margin: 24px 0 29px;
+        font:
+          900 clamp(45px, 5vw, 72px)/0.92 "Arial Black",
+          Arial,
+          sans-serif;
+        letter-spacing: -0.06em;
+        text-transform: uppercase;
+      }
+      .summary h1 em {
+        display: block;
+        color: var(--orange);
+        font:
+          400 0.88em/1 Georgia,
+          serif;
+        text-transform: lowercase;
+      }
+      .order {
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+        padding: 20px 0;
+      }
+      .order-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .order-line + .order-line {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid var(--line);
+      }
+      .order-line span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .order-line strong {
+        text-align: right;
+        font-size: 13px;
+      }
+      .order-line.total strong {
+        font:
+          900 24px/1 "Arial Black",
+          Arial,
+          sans-serif;
+      }
+      .summary-note {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.65;
+        margin-top: 20px;
+      }
+      .panel {
+        border: 1px solid var(--ink);
+        padding: clamp(27px, 4vw, 44px);
+        background: #fff;
+        box-shadow: 10px 10px 0 var(--lime);
+      }
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--line);
+      }
+      .panel-head span {
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .panel-head h2 {
+        margin: 8px 0 0;
+        font-size: 25px;
+        letter-spacing: -0.04em;
+      }
+      .bank-badge {
+        min-width: 92px;
+        padding: 11px 12px;
+        border-radius: 8px;
+        background: var(--yellow);
+        text-align: center;
+        font-size: 10px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .test-note {
+        margin: 22px 0;
+        padding: 15px 17px;
+        border-left: 3px solid var(--yellow);
+        background: #fffbea;
+        color: #4f4a3e;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      .checkout-form {
+        display: grid;
+        gap: 18px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .field input {
+        border: 1px solid var(--ink);
+        border-radius: 0;
+        padding: 15px 16px;
+        outline: 0;
+        background: #faf9f5;
+        font-size: 15px;
+        text-transform: none;
+      }
+      .field input:focus {
+        box-shadow: 0 0 0 3px var(--lime);
+      }
+      .bank-route {
+        padding: 19px;
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        gap: 14px;
+        border: 1px solid var(--line);
+        background: #f7f5ef;
+      }
+      .bank-route b:first-child {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--yellow);
+        font-size: 18px;
+      }
+      .bank-route strong {
+        display: block;
+        margin: 1px 0 5px;
+        font-size: 13px;
+      }
+      .bank-route p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.5;
+      }
+      .options {
+        display: grid;
+        gap: 12px;
+      }
+      .check {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+      .check input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        flex: 0 0 auto;
+        accent-color: var(--ink);
+      }
+      .check small {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 500;
+      }
+      .pay-button {
+        width: 100%;
+        border: 1px solid var(--ink);
+        padding: 18px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--ink);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .pay-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.3;
+      }
+      .error {
+        display: none;
+        margin: 0;
+        padding: 13px 15px;
+        border-left: 3px solid #ba2c1d;
+        background: #fff0ed;
+        color: #8f2116;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+      .error.is-visible {
+        display: block;
+      }
+      .safety {
+        margin: -3px 0 0;
+        color: var(--muted);
+        text-align: center;
+        font-size: 9px;
+        line-height: 1.55;
+      }
+      @media (max-width: 800px) {
+        .layout {
+          grid-template-columns: 1fr;
+          padding-top: 44px;
+        }
+        .summary {
+          position: static;
+        }
+        .summary h1 {
+          font-size: 49px;
+        }
+        .panel {
+          box-shadow: 6px 6px 0 var(--lime);
+        }
+      }
+      @media (max-width: 480px) {
+        .topline {
+          gap: 7px;
+          font-size: 7px;
+        }
+        .header {
+          height: 74px;
+        }
+        .brand span {
+          display: none;
+        }
+        .back {
+          font-size: 8px;
+        }
+        .layout {
+          width: min(100% - 28px, 1100px);
+          padding-bottom: 60px;
+        }
+        .panel {
+          padding: 22px;
+        }
+        .panel-head {
+          align-items: flex-start;
+          flex-direction: column-reverse;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topline">
+      Защищённая оплата <b>✦</b> Платёжная форма Т‑Банка <b>✦</b>
+      Реквизиты не хранятся
+    </div>
+    <header class="header">
+      <a class="brand" href="./"
+        ><b>ne</b><span>neServices<small>digital shop</small></span></a
+      >
+      <a class="back" href="./">← Вернуться в магазин</a>
+    </header>
+
+    <main class="layout">
+      <aside class="summary">
+        <span class="step" id="step-label">Шаг 2 из 2 / Оплата</span>
+        <h1 id="page-title">Оплата<br /><em>заказа</em></h1>
+        <div class="order">
+          <div class="order-line">
+            <span>Заказ</span><strong id="order-title">Design Drop</strong>
+          </div>
+          <div class="order-line">
+            <span>Период</span><strong id="order-period">1 месяц</strong>
+          </div>
+          <div class="order-line total">
+            <span>К оплате</span><strong id="order-amount">279 ₽</strong>
+          </div>
+        </div>
+        <p class="summary-note" id="renewal-note">
+          Следующее списание — через месяц. Автоплатёж можно отключить, а карту
+          отвязать в разделе управления подпиской.
+        </p>
+      </aside>
+
+      <section class="panel" aria-labelledby="payment-title">
+        <div class="panel-head">
+          <div>
+            <span>Безопасный переход</span>
+            <h2 id="payment-title">Продолжить в Т‑Банке</h2>
+          </div>
+          <b class="bank-badge">Т‑Банк</b>
+        </div>
+        <p class="test-note">
+          Подключён тестовый терминал T‑Bank DEMO. Платёж создаётся через
+          настоящий API банка, но реальные деньги пока не списываются.
+        </p>
+        <form class="checkout-form" id="checkout-form" novalidate>
+          <label class="field">
+            Email для чека и идентификации покупки
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              maxlength="254"
+              placeholder="name@example.com"
+              required
+            />
+          </label>
+          <div class="bank-route">
+            <b>→</b>
+            <div>
+              <strong>Данные карты вводятся только на стороне Т‑Банка</strong>
+              <p>
+                После нажатия откроется защищённая банковская форма. neServices
+                не получает номер карты, срок действия или CVC.
+              </p>
+            </div>
+          </div>
+          <div class="options">
+            <label class="check" id="recurring-option">
+              <input id="recurring-consent" type="checkbox" />
+              <span
+                >Согласен на сохранение карты и регулярные списания
+                <small id="recurring-copy"
+                  >279 ₽ каждый месяц до отмены подписки</small
+                ></span
+              >
+            </label>
+            <label class="check">
+              <input id="terms-consent" type="checkbox" />
+              <span
+                >Принимаю <a href="offer.html">условия оферты</a> и
+                <a href="privacy.html">политику конфиденциальности</a></span
+              >
+            </label>
+          </div>
+          <p class="error" id="error" role="alert"></p>
+          <button class="pay-button" id="pay-button" type="submit" disabled>
+            <span id="button-label">Перейти к оплате в Т‑Банк</span>
+            <strong id="button-amount">279 ₽ →</strong>
+          </button>
+          <p class="safety">
+            Сумма заказа проверяется на сервере. Секретный ключ терминала не
+            передаётся в браузер.
+          </p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get("mode");
+      const plan = params.get("plan") || "month";
+      const isBinding = mode === "bind";
+      const isCart = params.get("type") === "cart";
+      const money = (value) =>
+        `${new Intl.NumberFormat("ru-RU").format(value)} ₽`;
+
+      let storedOrder = {};
+      if (isCart) {
+        try {
+          storedOrder = JSON.parse(
+            localStorage.getItem("neservices-checkout-order") ||
+              localStorage.getItem("tovmasiani-checkout-order") ||
+              "{}",
+          );
+        } catch {
+          storedOrder = {};
+        }
+      }
+
+      const getProductIds = () => {
+        if (Array.isArray(storedOrder.productIds) && storedOrder.productIds.length > 0) {
+          return storedOrder.productIds;
+        }
+        if (typeof storedOrder.productId === "string" && storedOrder.productId) {
+          return [storedOrder.productId];
+        }
+        return ["brand-check"];
+      };
+
+      const order = isBinding
+        ? {
+            type: "bind",
+            title: "Привязка новой карты",
+            period: "Проверочный платёж",
+            amount: 1,
+          }
+        : isCart
+          ? {
+              type: "cart",
+              title: storedOrder.title || "Цифровые товары",
+              period: "Разовая покупка",
+              amount: Number(storedOrder.amount) || 279,
+              productIds: getProductIds(),
+            }
+          : {
+              type: "subscription",
+              title: "Подписка Design Drop",
+              period: plan === "year" ? "12 месяцев" : "1 месяц",
+              amount: plan === "year" ? 1790 : 279,
+              plan,
+            };
+
+      const email = document.querySelector("#email");
+      const recurringOption = document.querySelector("#recurring-option");
+      const recurringConsent = document.querySelector("#recurring-consent");
+      const termsConsent = document.querySelector("#terms-consent");
+      const form = document.querySelector("#checkout-form");
+      const payButton = document.querySelector("#pay-button");
+      const buttonLabel = document.querySelector("#button-label");
+      const errorBox = document.querySelector("#error");
+
+      document.querySelector("#order-title").textContent = order.title;
+      document.querySelector("#order-period").textContent = order.period;
+      document.querySelector("#order-amount").textContent = money(order.amount);
+      document.querySelector("#button-amount").textContent =
+        `${money(order.amount)} →`;
+      email.value = storedOrder.email || "";
+
+      if (isBinding) {
+        document.querySelector("#step-label").textContent =
+          "Способ оплаты / Новая карта";
+        document.querySelector("#page-title").innerHTML =
+          "Привязка<br><em>карты</em>";
+        document.querySelector("#payment-title").textContent =
+          "Привязать карту в Т‑Банке";
+        document.querySelector("#renewal-note").textContent =
+          "Т‑Банк проведёт проверочную операцию на 1 ₽ в тестовом режиме и сохранит карту для автоплатежей.";
+        document.querySelector("#recurring-copy").textContent =
+          "Использовать новую карту для автоплатежей Design Drop";
+      } else if (isCart) {
+        recurringOption.hidden = true;
+        document.querySelector("#renewal-note").textContent =
+          "Разовый платёж за выбранные цифровые товары через защищённую форму Т‑Банка.";
+      } else if (plan === "year") {
+        document.querySelector("#recurring-copy").textContent =
+          "1 790 ₽ один раз в год до отмены подписки";
+      }
+
+      const isEmailValid = () =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+      const isReady = () =>
+        isEmailValid() &&
+        termsConsent.checked &&
+        (recurringOption.hidden || recurringConsent.checked) &&
+        (!isCart || (order.productIds && order.productIds.length > 0));
+      const update = () => {
+        payButton.disabled = !isReady();
+        errorBox.classList.remove("is-visible");
+      };
+      [email, recurringConsent, termsConsent].forEach((element) =>
+        element.addEventListener("input", update),
+      );
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!isReady()) return;
+        payButton.disabled = true;
+        buttonLabel.textContent = "Создаём платёж…";
+        errorBox.classList.remove("is-visible");
+
+        const apiUrl = window.location.hostname.endsWith("github.io")
+          ? "https://store.tovmasiani.ru/api/tbank/init"
+          : "/api/tbank/init";
+
+        try {
+          const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              type: order.type,
+              plan: order.plan,
+              productIds: order.productIds,
+              email: email.value.trim(),
+            }),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.paymentUrl) {
+            throw new Error(result.error || "Не удалось создать платёж");
+          }
+          window.location.assign(result.paymentUrl);
+        } catch (error) {
+          errorBox.textContent =
+            error.message ||
+            "Не удалось связаться с банком. Попробуйте ещё раз.";
+          errorBox.classList.add("is-visible");
+          payButton.disabled = false;
+          buttonLabel.textContent = "Перейти к оплате в Т‑Банк";
+        }
+      });
+      update();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
+  <title id="title">Оплата через Т-Банк и T-Pay</title>
+  <desc id="desc">Логотип Т-Банка, обозначение T-Pay и адрес официального сайта tbank.ru</desc>
+  <rect width="760" height="430" fill="#fff"/>
+  <rect x="48" y="48" width="96" height="112" rx="22" fill="#ffdd2d"/>
+  <path d="M72 80h48v17h-15v39H88V97H72V80Z" fill="#171717"/>
+  <text x="175" y="116" fill="#171717" font-family="Arial, sans-serif" font-size="52" font-weight="800">Т-Банк</text>
+  <line x1="48" y1="205" x2="712" y2="205" stroke="#d7d5ce"/>
+  <text x="48" y="273" fill="#171717" font-family="Arial, sans-serif" font-size="24" font-weight="700">Банковские карты</text>
+  <text x="48" y="310" fill="#67635d" font-family="Arial, sans-serif" font-size="18">МИР · Visa · Mastercard</text>
+  <rect x="465" y="245" width="247" height="76" rx="38" fill="#171717"/>
+  <text x="588" y="294" fill="#fff" font-family="Arial, sans-serif" font-size="29" font-weight="800" text-anchor="middle">T-Pay</text>
+  <text x="48" y="382" fill="#171717" font-family="Arial, sans-serif" font-size="22" font-weight="700">tbank.ru</text>
+  <text x="712" y="382" fill="#67635d" font-family="Arial, sans-serif" font-size="16" text-anchor="end">Защищённая платёжная форма</text>
+</svg>

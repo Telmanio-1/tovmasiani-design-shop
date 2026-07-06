@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta
+      name="description"
+      content="Управление подпиской Design Drop и сохранённым способом оплаты."
+    />
+    <meta name="theme-color" content="#f2f0e9" />
+    <title>Управление подпиской — neServices</title>
+    <style>
+      :root {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        color: #171717;
+        background: #f2f0e9;
+        --ink: #171717;
+        --paper: #f2f0e9;
+        --lime: #c7ff37;
+        --orange: #ff6a3d;
+        --line: rgba(23, 23, 23, 0.18);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--paper);
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      a {
+        color: inherit;
+      }
+      .topline {
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .topline span {
+        color: var(--lime);
+        margin: 0 14px;
+      }
+      .header {
+        height: 88px;
+        padding: 0 clamp(20px, 4vw, 64px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .brand b {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--ink);
+        color: #fff;
+        font:
+          800 17px/1 "Arial Black",
+          Arial,
+          sans-serif;
+      }
+      .brand small {
+        display: block;
+        margin-top: 4px;
+        color: #77736d;
+        font-size: 8px;
+        letter-spacing: 0.16em;
+      }
+      .back {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-underline-offset: 5px;
+      }
+      .layout {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 70px 0 90px;
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: clamp(40px, 8vw, 110px);
+      }
+      .intro {
+        padding-top: 14px;
+      }
+      .eyebrow {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .intro h1 {
+        margin: 25px 0 24px;
+        font:
+          800 clamp(44px, 5vw, 74px)/0.92 "Arial Black",
+          "Arial Narrow",
+          Arial,
+          sans-serif;
+        letter-spacing: -0.06em;
+        text-transform: uppercase;
+      }
+      .intro h1 em {
+        font:
+          400 0.9em/1 Georgia,
+          serif;
+        color: var(--orange);
+        text-transform: lowercase;
+      }
+      .intro p {
+        max-width: 430px;
+        color: #625e57;
+        font-size: 15px;
+        line-height: 1.7;
+      }
+      .support {
+        display: inline-flex;
+        margin-top: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        text-underline-offset: 4px;
+      }
+      .panel {
+        border: 1px solid var(--ink);
+        background: #fff;
+        padding: clamp(25px, 4vw, 44px);
+        box-shadow: 10px 10px 0 var(--lime);
+      }
+      .panel-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+      .panel-head span,
+      .label {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .panel-head h2 {
+        margin: 8px 0 0;
+        font-size: 24px;
+        letter-spacing: -0.04em;
+      }
+      .status {
+        padding: 8px 11px;
+        border-radius: 999px;
+        background: #e8ffd0;
+        color: #245700;
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .plan {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        padding: 25px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .plan strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 17px;
+      }
+      .plan p {
+        grid-column: 1/-1;
+        margin: 0;
+        color: #716d66;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .price {
+        text-align: right;
+        font:
+          800 19px/1 "Arial Black",
+          Arial,
+          sans-serif;
+      }
+      .price small {
+        display: block;
+        margin-top: 7px;
+        color: #77736d;
+        font:
+          600 10px/1 Arial,
+          sans-serif;
+      }
+      .payment {
+        padding-top: 28px;
+      }
+      .payment-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .payment-title strong {
+        font-size: 17px;
+      }
+      .payment-title span {
+        color: #6d6962;
+        font-size: 11px;
+      }
+      .payment-title a {
+        color: #171717;
+        font-size: 10px;
+        font-weight: 900;
+        text-underline-offset: 4px;
+        text-transform: uppercase;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 19px;
+        border: 1px solid var(--line);
+        background: #f7f5ef;
+      }
+      .card-mark {
+        width: 48px;
+        height: 32px;
+        border-radius: 5px;
+        display: grid;
+        place-items: center;
+        background: var(--ink);
+        color: #fff;
+        font-size: 8px;
+        font-weight: 900;
+        font-style: italic;
+      }
+      .card-data {
+        flex: 1;
+      }
+      .card-data strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0.05em;
+      }
+      .card-data small {
+        display: block;
+        margin-top: 5px;
+        color: #77736d;
+        font-size: 10px;
+      }
+      .card-badge {
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .notice {
+        margin: 18px 0 0;
+        padding: 15px 17px;
+        border-left: 3px solid var(--orange);
+        background: #fff3ed;
+        color: #5e514b;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      .remove-box {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+      .confirm {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+      .confirm input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        flex: 0 0 auto;
+        accent-color: var(--ink);
+      }
+      .remove-button {
+        width: 100%;
+        margin-top: 18px;
+        padding: 17px 20px;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .remove-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.28;
+      }
+      .remove-button:not(:disabled):hover {
+        background: #c83222;
+        border-color: #c83222;
+      }
+      .security {
+        display: flex;
+        gap: 9px;
+        margin: 17px 0 0;
+        color: #77736d;
+        font-size: 10px;
+        line-height: 1.45;
+      }
+      .security b {
+        color: #2a6d00;
+      }
+      .success {
+        display: none;
+        padding: 34px 0 10px;
+        text-align: center;
+      }
+      .success.is-visible {
+        display: block;
+      }
+      .success-icon {
+        width: 68px;
+        height: 68px;
+        margin: 0 auto 22px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--lime);
+        font-size: 29px;
+        font-weight: 900;
+      }
+      .success h2 {
+        margin: 0 0 13px;
+        font:
+          800 28px/1.05 "Arial Black",
+          Arial,
+          sans-serif;
+        text-transform: uppercase;
+      }
+      .success p {
+        margin: 0 auto 22px;
+        max-width: 440px;
+        color: #68645e;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .success-back {
+        display: inline-block;
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .success-primary {
+        display: block;
+        max-width: 330px;
+        margin: 0 auto 17px;
+        padding: 16px 18px;
+        background: var(--ink);
+        color: #fff;
+        text-decoration: none;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .is-hidden {
+        display: none;
+      }
+      .legal {
+        margin-top: 28px;
+        color: #77736d;
+        font-size: 10px;
+        line-height: 1.6;
+      }
+      .legal a {
+        text-underline-offset: 3px;
+      }
+      @media (max-width: 800px) {
+        .layout {
+          grid-template-columns: 1fr;
+          padding-top: 45px;
+        }
+        .intro {
+          padding: 0;
+        }
+        .intro h1 {
+          font-size: 48px;
+        }
+        .header {
+          height: 74px;
+        }
+        .back {
+          font-size: 9px;
+        }
+        .panel {
+          box-shadow: 6px 6px 0 var(--lime);
+        }
+      }
+      @media (max-width: 480px) {
+        .topline {
+          font-size: 7px;
+        }
+        .topline span {
+          margin: 0 7px;
+        }
+        .brand span {
+          display: none;
+        }
+        .layout {
+          width: min(100% - 28px, 1120px);
+          padding-bottom: 60px;
+        }
+        .panel {
+          padding: 22px;
+        }
+        .payment-title {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .card {
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+        .card-data {
+          min-width: 150px;
+        }
+        .card-badge {
+          margin-left: 63px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topline">
+      Безопасная оплата <span>✦</span> Управление автоплатежами
+      <span>✦</span> Поддержка автора
+    </div>
+    <header class="header">
+      <a class="brand" href="./"
+        ><b>ne</b><span>neServices<small>digital shop</small></span></a
+      >
+      <a class="back" href="./">← Вернуться в магазин</a>
+    </header>
+    <main class="layout">
+      <section class="intro">
+        <span class="eyebrow">Личный кабинет / Оплата</span>
+        <h1>Управление<br /><em>подпиской</em></h1>
+        <p>
+          Здесь можно проверить тариф, дату следующего платежа и отвязать
+          сохранённую карту. После удаления карты автоматические списания
+          прекращаются.
+        </p>
+        <div class="support-info" style="margin-top: 24px; font-size: 13px; color: var(--muted); line-height: 1.6;">
+          <strong>Служба поддержки:</strong><br />
+          Email: <a href="mailto:ne.telman.t@gmail.com">ne.telman.t@gmail.com</a><br />
+          Телефон: <a href="tel:+79956649655">+7 (995) 664-96-55</a><br />
+          Telegram: <a href="https://t.me/Tovmasianii">@Tovmasianii</a>
+        </div>
+      </section>
+      <section class="panel" aria-labelledby="account-title">
+        <div id="active-state">
+          <div class="panel-head">
+            <div>
+              <span>Design Drop</span>
+              <h2 id="account-title">Ваша подписка</h2>
+            </div>
+            <b class="status">Активна</b>
+          </div>
+          <div class="plan">
+            <div>
+              <span class="label">Тариф</span><strong>Ежемесячный</strong>
+            </div>
+            <div class="price">279 ₽<small>в месяц</small></div>
+            <p>
+              Следующее автоматическое списание — 3 августа 2026 года. Отменить
+              автоплатёж можно в любой момент.
+            </p>
+          </div>
+          <div class="payment">
+            <div class="payment-title">
+              <strong>Сохранённая карта</strong
+              ><a href="checkout.html?mode=bind">Заменить карту</a>
+            </div>
+            <div class="card">
+              <div class="card-mark">МИР</div>
+              <div class="card-data">
+                <strong>•••• •••• •••• <span id="card-last4">4821</span></strong
+                ><small
+                  >Срок действия <span id="card-expiry">09/28</span></small
+                >
+              </div>
+              <b class="card-badge">Основная</b>
+            </div>
+            <p class="notice">
+              <strong>Важно:</strong> удаление карты отключит будущие
+              автоматические платежи. Доступ к уже оплаченному периоду
+              сохранится.
+            </p>
+            <div class="remove-box">
+              <label class="confirm"
+                ><input id="remove-confirm" type="checkbox" /><span
+                  >Подтверждаю, что хочу отвязать сохранённую карту и отключить
+                  последующие автоматические списания</span
+                ></label
+              >
+              <button
+                class="remove-button"
+                id="remove-card"
+                type="button"
+                disabled
+              >
+                Удалить сохранённую карту
+              </button>
+              <p class="security">
+                <b>✓</b
+                ><span
+                  >Данные карты обрабатываются платёжным сервисом Т‑Банка и не
+                  хранятся на сайте.</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="success"
+          id="success-state"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="success-icon">✓</div>
+          <h2>Карта удалена</h2>
+          <p>
+            Сохранённая карта •••• <span id="removed-card-last4">4821</span>
+            отвязана. Будущие автоматические списания по подписке Design Drop
+            отключены.
+          </p>
+          <a class="success-primary" href="checkout.html?mode=bind"
+            >Привязать новую карту</a
+          >
+          <a class="success-back" href="./">Вернуться в магазин</a>
+        </div>
+        <p class="legal">
+          Управляя способом оплаты, вы соглашаетесь с
+          <a href="offer.html">условиями публичной оферты</a> и
+          <a href="privacy.html">политикой конфиденциальности</a>.
+        </p>
+      </section>
+    </main>
+    <script>
+      const checkbox = document.querySelector("#remove-confirm");
+      const removeButton = document.querySelector("#remove-card");
+      const activeState = document.querySelector("#active-state");
+      const successState = document.querySelector("#success-state");
+      const last4 =
+        localStorage.getItem("neservices-card-last4") ||
+        localStorage.getItem("tovmasiani-card-last4") ||
+        "4821";
+      const expiry =
+        localStorage.getItem("neservices-card-expiry") ||
+        localStorage.getItem("tovmasiani-card-expiry") ||
+        "09/28";
+      document.querySelector("#card-last4").textContent = last4;
+      document.querySelector("#card-expiry").textContent = expiry;
+      document.querySelector("#removed-card-last4").textContent = last4;
+      const showRemovedState = () => {
+        activeState.classList.add("is-hidden");
+        successState.classList.add("is-visible");
+      };
+      if (
+        localStorage.getItem("neservices-card-removed") === "1" ||
+        localStorage.getItem("tovmasiani-card-removed") === "1"
+      ) {
+        showRemovedState();
+      }
+      checkbox.addEventListener("change", () => {
+        removeButton.disabled = !checkbox.checked;
+      });
+      removeButton.addEventListener("click", () => {
+        localStorage.setItem("neservices-card-removed", "1");
+        localStorage.removeItem("neservices-card-last4");
+        localStorage.removeItem("neservices-card-expiry");
+        localStorage.removeItem("tovmasiani-card-last4");
+        localStorage.removeItem("tovmasiani-card-expiry");
+        showRemovedState();
+      });
+    </script>
+  </body>
+</html>
